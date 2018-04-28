@@ -1,0 +1,8 @@
+language: java
+jdk:
+  - oraclejdk8
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+addons:
+    code_climate:
+        repo_token: 18ab303456c57109f572491163114b2b5f25954e2663966fe324434e597bfdf4
