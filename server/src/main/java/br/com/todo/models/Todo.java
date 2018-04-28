@@ -1,5 +1,6 @@
-package br.com.todo.model;
+package br.com.todo.models;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -12,6 +13,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -27,12 +29,15 @@ import lombok.Data;
 @Table(name = "todos")
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = { "createdAt", "updatedAt" }, allowGetters = true)
-public class Todo {
+public class Todo implements Serializable {
+
+	private static final long serialVersionUID = 3949964812573521454L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 
+	@NotNull
 	@NotBlank
 	@Size(max=100)
 	private String title;

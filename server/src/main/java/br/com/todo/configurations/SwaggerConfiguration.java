@@ -1,4 +1,4 @@
-package br.com.todo.configuration;
+package br.com.todo.configurations;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

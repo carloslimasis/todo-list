@@ -4,9 +4,11 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,11 +17,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.todo.exception.ResourceNotFoundException;
-import br.com.todo.model.Todo;
-import br.com.todo.repository.TodoRepository;
+import br.com.todo.models.Todo;
+import br.com.todo.services.TodoService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -30,44 +32,57 @@ import io.swagger.annotations.ApiResponses;
 public class TodoController {
 
 	@Autowired
-	private TodoRepository repository;
+	private TodoService service;
 
-	@ApiOperation(value = "GET All todos", response = Todo.class, notes = "This operation allows to GET all todos.")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "Returns all todos", response = Todo.class),
+	@ApiOperation(value = "GET All todos", response = Todo.class, notes = "This operation allows to GET all todos")
+	@ApiResponses(value = { 
+			@ApiResponse(code = 200, message = "Successfully retrieved todos", response = Todo.class),
+			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found", response = Todo.class),
 			@ApiResponse(code = 500, message = "Internal Server Error", response = Todo.class)
 
 	})
 	@GetMapping("/todos")
+	@ResponseStatus(HttpStatus.OK)
 	public List<Todo> getAllTodos() {
-		return repository.findAll();
+		return service.getAllTodos();
 	}
 
+	@ApiOperation(value = "Post todo", response = Todo.class, notes = "This operation allows to create a new todo")
+	@ApiResponses(value = { 
+			@ApiResponse(code = 200, message = "Successfully created todo", response = Todo.class),
+			@ApiResponse(code = 500, message = "Internal Server Error", response = Todo.class)
+
+	})
 	@PostMapping("/todos")
+	@ResponseStatus(HttpStatus.CREATED)
 	public Todo createTodo(@Valid @RequestBody Todo todo) {
-		return repository.save(todo);
+		return service.createTodo(todo);
 	}
 
+	@ApiOperation(value = "GET todo by id", response = Todo.class, notes = "This operation allows to get a todo by id")
 	@GetMapping("/todos/{id}")
+	@ResponseStatus(HttpStatus.OK)
 	public Todo getTodoById(@PathVariable("id") Integer id) {
-		return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Todo", "id", id));
+		return service.getTodoById(id);
 	}
 
+	@ApiOperation(value = "PUT todo", response = Todo.class, notes = "This operation allows to update a todo")
+	@ApiResponses(value = { 
+			@ApiResponse(code = 200, message = "Successfully updated todo", response = Todo.class),
+			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found", response = Todo.class),
+			@ApiResponse(code = 500, message = "Internal Server Error", response = Todo.class)
+
+	})
 	@PutMapping("/todos/{id}")
+	@ResponseStatus(HttpStatus.OK)
 	public Todo updateTodo(@PathVariable(value = "id") Integer id, @Valid @RequestBody Todo todoDetails) {
-		Todo todo = getTodoById(id);
-
-		todo.setTitle(todoDetails.getTitle());
-		todo.setComplete(todoDetails.isComplete());
-
-		return repository.save(todo);
+		return service.updateTodo(id, todoDetails);
 	}
 
 	@DeleteMapping("/todos/{id}")
+	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<?> deleteTodo(@PathVariable(value = "id") Integer id) {
-		Todo todo = getTodoById(id);
-
-		repository.delete(todo);
-
+		service.deleteTodo(id);
 		return ResponseEntity.ok().build();
 	}
 }
