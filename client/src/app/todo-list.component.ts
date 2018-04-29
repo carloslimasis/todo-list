@@ -54,6 +54,7 @@ export class TodoListComponent implements OnInit {
   }
 
   toggleCompleted(todoData: Todo): void {
+    todoData.completed = !todoData.completed;
     this.todoService.updateTodo(todoData)
     .then(updatedTodo => {
       let existingTodo = this.todos.find(todo => todo.id === updatedTodo.id);

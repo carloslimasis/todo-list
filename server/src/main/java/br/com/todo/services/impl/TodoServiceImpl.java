@@ -42,7 +42,7 @@ public class TodoServiceImpl implements TodoService {
 		Todo todo = getTodoById(id);
 
 		todo.setTitle(todoDetails.getTitle());
-		todo.setComplete(todoDetails.isComplete());
+		todo.setCompleted(todoDetails.isCompleted());
 
 		return repository.save(todo);
 	}

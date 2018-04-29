@@ -42,7 +42,7 @@ public class Todo implements Serializable {
 	@Size(max=100)
 	private String title;
 
-	private boolean complete;
+	private boolean completed;
 
 	@Column(nullable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
