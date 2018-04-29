@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,8 +35,8 @@ public class TodoController {
 	@ApiOperation(value = "GET All todos", response = Todo.class, notes = "This operation allows to GET all todos")
 	@ApiResponses(value = { 
 			@ApiResponse(code = 200, message = "Successfully retrieved todos", response = Todo.class),
-			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found", response = Todo.class),
-			@ApiResponse(code = 500, message = "Internal Server Error", response = Todo.class)
+			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
+			@ApiResponse(code = 500, message = "Internal Server Error")
 
 	})
 	@GetMapping("/todos")
@@ -50,7 +48,7 @@ public class TodoController {
 	@ApiOperation(value = "Post todo", response = Todo.class, notes = "This operation allows to create a new todo")
 	@ApiResponses(value = { 
 			@ApiResponse(code = 200, message = "Successfully created todo", response = Todo.class),
-			@ApiResponse(code = 500, message = "Internal Server Error", response = Todo.class)
+			@ApiResponse(code = 500, message = "Internal Server Error")
 
 	})
 	@PostMapping("/todos")
@@ -69,8 +67,8 @@ public class TodoController {
 	@ApiOperation(value = "PUT todo", response = Todo.class, notes = "This operation allows to update a todo")
 	@ApiResponses(value = { 
 			@ApiResponse(code = 200, message = "Successfully updated todo", response = Todo.class),
-			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found", response = Todo.class),
-			@ApiResponse(code = 500, message = "Internal Server Error", response = Todo.class)
+			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
+			@ApiResponse(code = 500, message = "Internal Server Error")
 
 	})
 	@PutMapping("/todos/{id}")
@@ -79,6 +77,13 @@ public class TodoController {
 		return service.updateTodo(id, todoDetails);
 	}
 
+	@ApiOperation(value = "DELETE todo", response = Todo.class, notes = "This operation allows to delete a todo")
+	@ApiResponses(value = { 
+			@ApiResponse(code = 200, message = "Successfully deleted todo"),
+			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
+			@ApiResponse(code = 500, message = "Internal Server Error")
+
+	})
 	@DeleteMapping("/todos/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<?> deleteTodo(@PathVariable(value = "id") Integer id) {
