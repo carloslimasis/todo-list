@@ -1,30 +1,35 @@
-version: "3"
+version: '2'
 services: 
-  client:
-    build: ./client/
-    container_name: todo-client
-    ports:
-      - '4200:4200'
-    volumes:
-      - .:/opt/client
-    command: ng serve --open
-  docker-mysql:
-    image: mysql:latest
+  db:
+    image: mysql:5.6
+    container_name: mysql-standalone
     environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=test
-      - MYSQL_PASSWORD=root
-  todo-server:
-    build: ./server/
-    container_name: todo-server
-    image: todo-server
-    depends_on:
-      - docker-mysql
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=todo
+      - MYSQL_USER=sa
+      - MYSQL_PASSWORD=password
     ports:
-      - 8080:8080
-    environment:
-      - DATABASE_HOST=todo
-      - DATABASE_USER=springuser
-      - DATABASE_PASSWORD=Todo@1234
-      - DATABASE_NAME=todos
+      - 3308:3306
+  web:
+    image: todo/todo-web
+    build: 
+      context: ./server
+      dockerfile: Dockerfile
+    depends_on: 
+      - db
+    ports:
+      - 8086:8086
+    environment: 
+      - DATABASE_HOST=db
+      - DATABASE_PASSWORD=password
+      - DATABASE_NAME=todo
       - DATABASE_PORT=3306
+  client:
+    image: todo/todo-client
+    build: 
+      context: ./client
+      dockerfile: Dockerfile
+    depends_on: 
+      - web
+    ports:
+      - 4200:4200

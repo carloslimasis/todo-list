@@ -1,25 +1,16 @@
-# Create image based off of the official Node 6 image
-FROM node:6
-
-# Create a directory where our app will be placed
+#  Create a new image from the base nodejs 7 image.
+FROM node:7
+# Create the target directory in the imahge
 RUN mkdir -p /opt/client
-
-# Change directory so that our commands run inside this new dir
+# Set the created directory as the working directory
 WORKDIR /opt/client
-
-# Copy dependency definitions
+# Copy the package.json inside the working directory
 COPY package.json /opt/client
-
-# Install dependecies
-RUN npm cache clean
+# Install required dependencies
 RUN npm install
-RUN npm install -g @angular/cli
-
-# Get all the code needed to run the app
+# Copy the client application source files. You can use .dockerignore to exlcude files. Works just as .gitignore does.
 COPY . /opt/client
-
-# Expose the port the app runs in
+# Open port 4200. This is the port that our development server uses
 EXPOSE 4200
-
-# Serve the app
+# Start the application. This is the same as running ng serve.
 CMD ["npm", "start"]
