@@ -14,7 +14,7 @@ This is a todo list application.
 
 ## How It Works
 
-Generates the jar
+Generate the jar
 
 ```sh
 $ mvn clean install -Dmaven.test.skip=true
