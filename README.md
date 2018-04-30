@@ -7,10 +7,18 @@ This is a todo list application.
 
 ## Requirements
 
+* Maven
+* Java 8
 * Docker
 * Docker Compose
 
 ## How It Works
+
+Generates the jar
+
+```sh
+$ mvn clean install -Dmaven.test.skip=true
+```
 
 Up the services with docker compose
 
